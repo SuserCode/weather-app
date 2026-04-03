@@ -1,4 +1,5 @@
 const UI = {
+  cityInfo: document.getElementById("city-info"),
   weatherCard: document.getElementById("current-weather"),
   mainIcon: document.getElementById("weather-main-icon"),
   weatherForecast: document.getElementById("weather-forecast"),
@@ -143,9 +144,19 @@ async function apiFetchJSON(url, signal) {
 // ==========================
 // 🎨 Render UI
 // ==========================
-function render() {
+function render(info) {
+  renderCityInfo(info);
   renderCurrentWeather();
   renderForecast();
+}
+
+function renderCityInfo(info) {
+  const title = info.name || "My Weather Forecast";
+  const description = info.description || "Current weather conditions";
+  UI.cityInfo.innerHTML = `
+    <h2 class="weather-info__title">${title}</h2>
+    <p class="weather-info__description">${description}</p>
+  `;
 }
 
 // ==========================
@@ -168,6 +179,56 @@ function renderCurrentWeather() {
     </div>
   `;
 }
+
+async function geoCodeData(city) {
+  try {
+    const response = await fetch(
+      `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=2&language=en&format=json`,
+    );
+
+    if (!response.ok) {
+      throw new Error(
+        `Geocoding API error: ${response.status} (${response.statusText})`,
+      );
+    }
+
+    const data = await response.json();
+
+    return data.results || [];
+  } catch (error) {
+    console.error("Failed to fetch geocode data:", error);
+    return [];
+  }
+}
+
+// run search with input city name (bonus feature)
+document
+  .getElementById("city-input")
+  .addEventListener("keypress", async (e) => {
+    if (e.key === "Enter") {
+      const city = e.target.value.trim();
+      if (!city) return;
+
+      try {
+        UI.metaData.textContent = `Searching weather for "${city}"...`;
+        const geocodeData = await geoCodeData(city);
+
+        if (!Array.isArray(geocodeData) || geocodeData.length === 0) {
+          throw new Error("City not found");
+        }
+        const { latitude, longitude } =
+          city === "mila" ? geocodeData[1] : geocodeData[0];
+        data = await fetchWeatherData(latitude, longitude);
+        updateMetadata(data);
+        render({ name: city, description: "Weather for " + city });
+      } catch (err) {
+        console.error(err);
+        UI.metaData.textContent = `⚠️ Error: ${err.message}`;
+      } finally {
+        e.target.value = "";
+      }
+    }
+  });
 
 // ==========================
 // 📅 Forecast (7 days max)
@@ -225,12 +286,21 @@ function updateMetadata(data) {
   try {
     UI.metaData.textContent = "Loading weather...";
 
-    const loc = await getCurrentLocation();
+    // const loc = await getCurrentLocation();
+    const geocodeData = await geoCodeData("Algiers");
+    console.log("Geocode data:", geocodeData);
+    const loc = {
+      latitude: geocodeData[0].latitude,
+      longitude: geocodeData[0].longitude,
+    }; // default to Algiers for testing
 
     data = await fetchWeatherData(loc.latitude, loc.longitude);
 
     updateMetadata(data);
-    render();
+    render({
+      name: geocodeData[0].name,
+      description: `Weather for ${geocodeData[0].name}`,
+    });
   } catch (err) {
     if (err.name === "AbortError") return;
 

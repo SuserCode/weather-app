@@ -14,63 +14,20 @@
     <main class="container">
       <div class="weather-card" id="current-weather">
         <div id="meta-data"></div>
+        <div id="meta-data">
+          <input type="text" id="city-input" placeholder="Enter city name" />
+        </div>
         <!-- Current Weather Section -->
         <div class="weather-card__current">
-          <div class="weather-info">
-            <h2 class="weather-info__title">My Weather Forecast</h2>
-            <p class="weather-info__description">Current weather conditions</p>
-          </div>
+          <div class="weather-info" id="city-info"></div>
           <div id="current-weather-meta-data"></div>
           <div class="weather-icon" id="weather-main-container">
-            <img id="weather-main-icon" />
+            <img id="weather-main-icon" class="weather-icon__image" />
           </div>
         </div>
 
         <!-- Daily Forecast Section -->
-        <div class="weather-card__forecast" id="weather-forecast">
-          <div class="forecast-day">
-            <h4 class="forecast-day__name">Thursday</h4>
-            <div class="forecast-day__icon">
-              <img src="" alt="Weather condition" class="forecast-day__image" />
-            </div>
-          </div>
-          <div class="forecast-day">
-            <h4 class="forecast-day__name">Friday</h4>
-            <div class="forecast-day__icon">
-              <img src="" alt="Weather condition" class="forecast-day__image" />
-            </div>
-          </div>
-          <div class="forecast-day">
-            <h4 class="forecast-day__name">Saturday</h4>
-            <div class="forecast-day__icon">
-              <img src="" alt="Weather condition" class="forecast-day__image" />
-            </div>
-          </div>
-          <div class="forecast-day">
-            <h4 class="forecast-day__name">Sunday</h4>
-            <div class="forecast-day__icon">
-              <img src="" alt="Weather condition" class="forecast-day__image" />
-            </div>
-          </div>
-          <div class="forecast-day">
-            <h4 class="forecast-day__name">Monday</h4>
-            <div class="forecast-day__icon">
-              <img src="" alt="Weather condition" class="forecast-day__image" />
-            </div>
-          </div>
-          <div class="forecast-day">
-            <h4 class="forecast-day__name">Tuesday</h4>
-            <div class="forecast-day__icon">
-              <img src="" alt="Weather condition" class="forecast-day__image" />
-            </div>
-          </div>
-          <div class="forecast-day">
-            <h4 class="forecast-day__name">Wednesday</h4>
-            <div class="forecast-day__icon">
-              <img src="" alt="Weather condition" class="forecast-day__image" />
-            </div>
-          </div>
-        </div>
+        <div class="weather-card__forecast" id="weather-forecast"></div>
       </div>
     </main>
 
